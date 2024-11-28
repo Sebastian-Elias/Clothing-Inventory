@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Detalles del Producto</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <img [src]="product?.image" [alt]="product?.name" />
+    <ion-card-header>
+      <ion-card-title>{{ product?.name }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Descripción:</strong> {{ product?.description }}</p>
+      <p><strong>Precio:</strong> ${{ product?.price }}</p>
+      <p><strong>Categoría:</strong> {{ product?.category }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="full" color="primary" (click)="openEditModal()">Editar</ion-button>
+  <ion-button expand="full" color="danger" (click)="deleteProduct()">Eliminar</ion-button>
+</ion-content>
+

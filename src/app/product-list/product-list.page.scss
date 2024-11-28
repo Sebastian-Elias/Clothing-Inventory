@@ -1,0 +1,36 @@
+/* Asegúrate de que el botón flotante tenga un tamaño adecuado */
+.add-product-button {
+    --width: 48px;
+    --height: 48px;
+    --border-radius: 50%;
+    --box-shadow: none;
+  }
+  
+  ion-fab-button {
+    --background: #28a745; /* Color verde para el botón */
+    --color: white; /* Color del icono */
+  }
+  
+  ion-fab {
+    position: fixed;  /* Asegura que se quede fijo */
+    bottom: 10px;     /* Posición a 10px desde la parte inferior de la pantalla */
+    right: 10px;      /* Posición a 10px desde la derecha */
+  }
+  
+  ion-icon {
+    font-size: 28px; /* Ajusta el tamaño del icono */
+  }
+  
+  .fixed-card {
+    height: 250px; /* Fija la altura de todos los cards */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden; /* Recorta contenido excedente */
+  }
+  .fixed-card img {
+    height: 120px; /* Ajusta la altura de la imagen */
+    object-fit: cover; /* Recorta la imagen para que encaje */
+    width: 100%; /* Asegura que ocupe todo el ancho */
+  }
+  

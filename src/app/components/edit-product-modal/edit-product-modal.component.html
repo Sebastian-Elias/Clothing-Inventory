@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Editar Producto</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <img [src]="product.image" alt="{{ product?.name }}" />
+
+    <ion-card-header>
+      <ion-card-title>Editar Producto</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-input [(ngModel)]="product.name" placeholder="Nombre del producto"></ion-input>
+      <ion-textarea [(ngModel)]="product.description" placeholder="Descripción"></ion-textarea>
+      <ion-input [(ngModel)]="product.price" type="number" placeholder="Precio"></ion-input>
+      <ion-input [(ngModel)]="product.category" placeholder="Categoría"></ion-input>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="full" color="primary" (click)="save()">Guardar Cambios</ion-button>
+</ion-content>

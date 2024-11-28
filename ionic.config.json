@@ -1,0 +1,7 @@
+{
+  "name": "QualityControl",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
