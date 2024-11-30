@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -10,5 +11,12 @@ import { IonicModule } from '@ionic/angular';
   imports: [IonicModule, RouterLink],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private router: Router) {
+    this.initializeApp();
+  }
+
+  initializeApp() {
+    // Redirige a la página de productos al inicio
+    this.router.navigate(['/product-list']);
+  }
 }

@@ -42,7 +42,7 @@ import {
 })
 export class EditProductModalComponent {
   @Input() product: Product = {
-    _id: '',
+    id: '',
     name: '',
     description: '',
     price: 0,

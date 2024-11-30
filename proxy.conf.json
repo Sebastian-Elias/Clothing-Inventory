@@ -4,6 +4,13 @@
       "secure": false,
       "changeOrigin": true,
       "logLevel": "debug"
+    },
+    "/mockapi": {
+      "target": "https://674929505801f51535932201.mockapi.io",
+      "secure": false,
+      "changeOrigin": true,
+      "logLevel": "debug"
     }
-  }
+}
+
   

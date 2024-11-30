@@ -9,6 +9,13 @@ import { add } from 'ionicons/icons';
 import { ModalController } from '@ionic/angular';
 import { ProductDetailModalComponent } from '../components/product-detail-modal/product-detail-modal.component';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Storage } from '@capacitor/storage';
+import { isPlatform } from '@ionic/angular';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
+
+
+
 
 @Component({
   selector: 'app-product-list',
@@ -26,17 +33,44 @@ export class ProductListPage implements OnInit {
   productsService = inject(ProductsService);
   alertController = inject(AlertController);
   modalController = inject(ModalController);
+  authService = inject(AuthService);
+  router = inject(Router);
 
   // Modal controlador
   modal: HTMLIonModalElement | null = null;
 
   async ngOnInit() {
-    // Registra los iconos, incluyendo el icono 'add' que utilizarás para el botón de agregar
     addIcons({ add });
-    // Cargar los productos
-    const response = await this.productsService.getAll();
-    this.products = response.results;
+  
+    // Cargar los productos desde el almacenamiento local
+    const storedProducts = await this.loadProductsFromStorage();
+    if (storedProducts.length > 0) {
+      this.products = storedProducts;
+    } else {
+      // Si no hay productos guardados, obténlos desde el servicio o servidor
+      const response = await this.productsService.getAll();
+      this.products = response.results;
+    }
   }
+  
+  // Función para cargar productos desde el almacenamiento local
+  async loadProductsFromStorage(): Promise<Product[]> {
+    const keys = await Storage.keys(); // Obtener todas las claves del almacenamiento local
+    const products: Product[] = [];
+  
+    // Recorrer todas las claves y cargar los productos
+    for (const key of keys.keys) {
+      if (key.startsWith('product_')) {
+        const { value } = await Storage.get({ key });
+        if (value) {
+          products.push(JSON.parse(value)); // Convertir el valor de JSON a objeto
+        }
+      }
+    }
+  
+    return products;
+  }
+  
 
   async viewProduct(product: Product) {
     // Crear y presentar el modal
@@ -55,7 +89,7 @@ export class ProductListPage implements OnInit {
     }
     if (data?.deletedProduct) {
       // Si se eliminó un producto, actualiza la lista
-      this.products = this.products.filter(p => p._id !== data.deletedProduct._id);
+      this.products = this.products.filter(p => p.id !== data.deletedProduct.id);
       console.log('Producto eliminado:', data.deletedProduct);
     }
   }
@@ -112,7 +146,7 @@ export class ProductListPage implements OnInit {
   
             // Crear un nuevo producto con los datos del formulario y la imagen seleccionada
             const newProduct: Product = {
-              _id: Date.now().toString(),
+              id: Date.now().toString(),
               name: data.name,
               description: data.description,
               price: parseFloat(data.price),
@@ -124,6 +158,12 @@ export class ProductListPage implements OnInit {
             // Guardar el producto utilizando el servicio
             const createdProduct = await this.productsService.createProduct(newProduct);
             this.products.unshift(createdProduct);  // Añadir el nuevo producto al inicio de la lista
+
+            // Guardar en el almacenamiento local
+          await Storage.set({
+            key: 'product_' + newProduct.id,
+            value: JSON.stringify(newProduct),
+          });
   
             return true; // Cierra el alerta
           },
@@ -147,70 +187,58 @@ export class ProductListPage implements OnInit {
           text: 'Eliminar',
           role: 'destructive',
           handler: async () => {
-            // Llamar al servicio para eliminar el producto
+            // Eliminar del almacenamiento local
+            await Storage.remove({ key: 'product_' + id });
+  
+            // Eliminar del servidor o base de datos
             await this.productsService.deleteProduct(id);
+  
             // Actualizar la lista de productos en la vista
-            this.products = this.products.filter(product => product._id !== id);
-          }
-        }
-      ]
+            this.products = this.products.filter(product => product.id !== id);
+          },
+        },
+      ],
     });
-
+  
     await alert.present();
   }
+  
 
   async editProduct(product: Product) {
     const alert = await this.alertController.create({
       header: 'Editar producto',
       inputs: [
-        {
-          name: 'name',
-          type: 'textarea',
-          placeholder: 'Nombre',
-          value: product.name
-        },
-        {
-          name: 'description',
-          type: 'textarea',
-          placeholder: 'Descripción',
-          value: product.description
-        },
-        {
-          name: 'price',
-          type: 'number',
-          placeholder: 'Precio',
-          value: product.price
-        },
-        {
-          name: 'category',
-          type: 'text',
-          placeholder: 'Categoría',
-          value: product.category
-        }
+        { name: 'name', type: 'textarea', placeholder: 'Nombre', value: product.name },
+        { name: 'description', type: 'textarea', placeholder: 'Descripción', value: product.description },
+        { name: 'price', type: 'number', placeholder: 'Precio', value: product.price },
+        { name: 'category', type: 'text', placeholder: 'Categoría', value: product.category },
       ],
       buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
+        { text: 'Cancelar', role: 'cancel' },
         {
           text: 'Guardar',
           handler: async (data) => {
             const updatedProduct = { ...product, ...data };
-            // Actualiza el producto en el servicio
-            const updated = await this.productsService.updateProduct(updatedProduct);
-            // Actualiza el producto en la lista
-            this.products = this.products.map(p => p._id === product._id ? updated : p);
-          }
-        }
-      ]
+  
+            // Actualizar el producto en el almacenamiento local
+            await Storage.set({
+              key: 'product_' + updatedProduct.id,
+              value: JSON.stringify(updatedProduct),
+            });
+  
+            // Actualizar el producto en la lista de productos
+            this.products = this.products.map(p => p.id === product.id ? updatedProduct : p);
+          },
+        },
+      ],
     });
-
+  
     await alert.present();
   }
+  
 
   trackByProductId(index: number, product: Product) {
-    return product._id;
+    return product.id;
   }
 
   async openEditProductModal(product: Product) {
@@ -230,6 +258,12 @@ export class ProductListPage implements OnInit {
     });
   
     await modal.present();
+  }
+
+  // Método para cerrar sesión
+  logout(): void {
+    this.authService.logout();  // Llama al método logout del AuthService
+    this.router.navigate(['/login']);  // Redirige al login
   }
   
 }

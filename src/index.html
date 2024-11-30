@@ -7,11 +7,20 @@
 
   <base href="/" />
 
+  <!-- Política de Seguridad de Contenido (CSP) combinada -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'; 
+    img-src 'self' http://localhost:8100 http://peticiones.online; 
+    script-src 'self' 'unsafe-inline' 'unsafe-eval'; 
+    style-src 'self' 'unsafe-inline'; 
+    font-src 'self'; 
+    connect-src 'self' https://peticiones.online https://674929505801f51535932201.mockapi.io;
+  ">
   <meta name="color-scheme" content="light dark" />
   <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="msapplication-tap-highlight" content="no" />
-
+ 
   <link rel="icon" type="image/png" href="assets/icon/favicon.png" />
 
   <!-- add to homescreen for ios -->
