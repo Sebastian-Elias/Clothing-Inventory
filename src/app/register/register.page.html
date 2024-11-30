@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Registro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <form (ngSubmit)="register()" #registerForm="ngForm">
+          <ion-item>
+            <ion-label position="floating">Nombre</ion-label>
+            <ion-input [(ngModel)]="nombre" name="nombre" type="text" placeholder="Nombre" required></ion-input>
+            <ion-label position="floating">Correo Electrónico</ion-label>
+            <ion-input [(ngModel)]="email" name="email"  type="email" placeholder="Email" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input [(ngModel)]="password" name="password" [ngModelOptions]="{standalone: true}" type="password" placeholder="Contraseña" required></ion-input>
+          </ion-item>
+
+          <ion-button expand="full" type="submit" [disabled]="!registerForm.valid">
+            Registrarse
+          </ion-button>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

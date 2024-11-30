@@ -5,6 +5,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 
 export interface User {
   id?: string; // MockAPI asigna un ID automáticamente
+  nombre: string;
   email: string;
   password: string;
 }
@@ -26,6 +27,9 @@ export class AuthService {
   // Registrar un nuevo usuario
   async register(user: User): Promise<void> {
     try {
+      if (!user.email || !user.password) {
+        throw new Error('Por favor ingresa todos los campos requeridos.');
+      }
       await firstValueFrom(this.http.post<User>(this.apiUrl, user));
       this.router.navigate(['/login']); // Redirige al login tras el registro
     } catch (error) {

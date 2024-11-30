@@ -14,9 +14,6 @@ import { isPlatform } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
-
-
-
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.page.html',
@@ -29,6 +26,7 @@ export class ProductListPage implements OnInit {
   products: Product[] = [];
   isModalOpen = false;
   currentProduct: Product | null = null;
+  productImage: string | null = null;
 
   productsService = inject(ProductsService);
   alertController = inject(AlertController);
@@ -43,15 +41,20 @@ export class ProductListPage implements OnInit {
     addIcons({ add });
   
     // Cargar los productos desde el almacenamiento local
-    const storedProducts = await this.loadProductsFromStorage();
-    if (storedProducts.length > 0) {
-      this.products = storedProducts;
-    } else {
+    //const storedProducts = await this.loadProductsFromStorage();
+    //if (storedProducts.length > 0) {
+    //  this.products = storedProducts;
+    //} else {
       // Si no hay productos guardados, obténlos desde el servicio o servidor
-      const response = await this.productsService.getAll();
-      this.products = response.results;
-    }
-  }
+     // const response = await this.productsService.getAll();
+     // this.products = response.results;
+    //}
+  //}
+
+  // Cargar los productos desde la API
+  const response = await this.productsService.getAll();
+  this.products = response.results;
+}
   
   // Función para cargar productos desde el almacenamiento local
   async loadProductsFromStorage(): Promise<Product[]> {
@@ -102,7 +105,12 @@ export class ProductListPage implements OnInit {
         { name: 'description', type: 'textarea', placeholder: 'Descripción' },
         { name: 'price', type: 'number', placeholder: 'Precio' },
         { name: 'category', type: 'text', placeholder: 'Categoría' },
-        
+        { 
+          name: 'image', 
+          type: 'text', 
+          placeholder: 'Ruta de la imagen', 
+          value: this.productImage || 'assets/polera.webp' 
+        },
       ],
       buttons: [
         {
@@ -126,44 +134,32 @@ export class ProductListPage implements OnInit {
               return false; // Mantén el alerta abierto.
             }
   
-            // Selección de imagen (galería o cámara)
-            let image: string | undefined;
-            try {
-              // Usamos Camera.getPhoto() para obtener la imagen de la cámara o la galería
-              const imageResult = await Camera.getPhoto({
-                quality: 100,
-                source: CameraSource.Prompt, // Permite al usuario elegir entre la galería o la cámara
-                correctOrientation: true,
-                resultType: CameraResultType.DataUrl, // Obtiene la imagen como una URL en base64
-              });
-  
-              image = imageResult.dataUrl; // Almacenamos la imagen en base64
-            } catch (error) {
-              console.error('Error al seleccionar imagen:', error);
-              // Si no se selecciona imagen, asigna una predeterminada
-              image = 'assets/default-image.png';
-            }
-  
-            // Crear un nuevo producto con los datos del formulario y la imagen seleccionada
+            // Crear un nuevo producto con los datos del formulario
             const newProduct: Product = {
-              id: Date.now().toString(),
+              id: '', // Esto lo maneja la API
               name: data.name,
               description: data.description,
               price: parseFloat(data.price),
               category: data.category,
-              image: image || 'assets/default-image.png', // Usar imagen seleccionada o predeterminada
+              image: data.image, // Usamos la imagen proporcionada por el usuario
               active: true, // Marcado como activo por defecto
             };
   
-            // Guardar el producto utilizando el servicio
-            const createdProduct = await this.productsService.createProduct(newProduct);
-            this.products.unshift(createdProduct);  // Añadir el nuevo producto al inicio de la lista
-
-            // Guardar en el almacenamiento local
-          await Storage.set({
-            key: 'product_' + newProduct.id,
-            value: JSON.stringify(newProduct),
-          });
+            try {
+              // Llamar al servicio para crear el producto
+              const createdProduct = await this.productsService.createProduct(newProduct);
+              console.log('Producto creado:', createdProduct);
+              // Si la creación fue exitosa, añade el producto a la lista
+              this.products.unshift(createdProduct);
+            } catch (error) {
+              console.error('Error al crear el producto:', error);
+              const errorAlert = await this.alertController.create({
+                header: 'Error',
+                message: 'Hubo un problema al crear el producto. Intenta nuevamente.',
+                buttons: ['OK'],
+              });
+              await errorAlert.present();
+            }
   
             return true; // Cierra el alerta
           },
@@ -191,10 +187,20 @@ export class ProductListPage implements OnInit {
             await Storage.remove({ key: 'product_' + id });
   
             // Eliminar del servidor o base de datos
-            await this.productsService.deleteProduct(id);
-  
-            // Actualizar la lista de productos en la vista
-            this.products = this.products.filter(product => product.id !== id);
+            try {
+              await this.productsService.deleteProduct(id);
+              console.log('Producto eliminado del servidor');
+              // Eliminar de la lista local
+              this.products = this.products.filter(product => product.id !== id);
+            } catch (error) {
+              console.error('Error al eliminar el producto del servidor:', error);
+              const errorAlert = await this.alertController.create({
+                header: 'Error',
+                message: 'Hubo un problema al eliminar el producto. Intenta nuevamente.',
+                buttons: ['OK'],
+              });
+              await errorAlert.present();
+            }
           },
         },
       ],
@@ -203,7 +209,6 @@ export class ProductListPage implements OnInit {
     await alert.present();
   }
   
-
   async editProduct(product: Product) {
     const alert = await this.alertController.create({
       header: 'Editar producto',
@@ -236,7 +241,6 @@ export class ProductListPage implements OnInit {
     await alert.present();
   }
   
-
   trackByProductId(index: number, product: Product) {
     return product.id;
   }
@@ -265,6 +269,20 @@ export class ProductListPage implements OnInit {
     this.authService.logout();  // Llama al método logout del AuthService
     this.router.navigate(['/login']);  // Redirige al login
   }
-  
+
+  takePicture() {
+    Camera.getPhoto({
+      quality: 100,
+      allowEditing: false,
+      resultType: CameraResultType.Uri,  // Use URI to get the file path
+      source: CameraSource.Camera,  // Use the camera to take the picture
+    }).then((image) => {
+      console.log('Imagen tomada:', image);
+      // Ensure productImage is either a valid string or null
+      this.productImage = image.webPath ?? null;  // Use null if image.webPath is undefined
+    }).catch((err) => {
+      console.error('Error al tomar la foto:', err);
+    });
+  }
 }
 

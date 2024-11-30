@@ -1,36 +1,110 @@
-/* Asegúrate de que el botón flotante tenga un tamaño adecuado */
-.add-product-button {
-    --width: 48px;
-    --height: 48px;
-    --border-radius: 50%;
-    --box-shadow: none;
+/* Estilo general para el contenido */
+
+
+ion-toolbar {
+  padding: 0 20px; /* Ajusta los márgenes del toolbar */
+}
+
+ion-title {
+  font-weight: bold;
+  color: black;
+}
+
+ion-button {
+  background-color: #f6f6f6;
+  color: #333;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+ion-button:hover {
+  background-color: #d9d9d9;
+}
+
+ion-content {
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+/* Diseño de la lista de productos */
+ion-card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave para las tarjetas */
+  border-radius: 10px;
+  background-color: #fff;
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+ion-card:hover {
+  transform: translateY(-5px); /* Efecto de elevación al pasar el ratón */
+}
+
+ion-card img {
+  width: 100%;
+  border-radius: 10px 10px 0 0; /* Redondea solo la parte superior de la imagen */
+  height: 200px; /* Define una altura fija para las imágenes */
+  object-fit: cover; /* Asegura que la imagen se ajuste bien dentro del contenedor */
+}
+
+ion-card-header {
+  padding: 10px;
+  background-color: #f6f6f6; /* Fondo claro para el encabezado */
+  border-radius: 0 0 10px 10px; /* Redondea la parte inferior del encabezado */
+}
+
+ion-card-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+ion-card-subtitle {
+  font-size: 1.1em;
+  color: #4facfe; /* Color azul claro para el precio */
+  font-weight: 600;
+}
+
+/* Estilo para el botón flotante */
+ion-fab {
+  z-index: 10; /* Asegura que el botón flotante quede encima de otros elementos */
+}
+
+ion-fab-button {
+  --background: #4facfe; /* Fondo azul para el botón flotante */
+  --ripple-color: white;
+  border-radius: 50%;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave alrededor del botón */
+  transition: background-color 0.3s ease-in-out;
+}
+
+ion-fab-button:hover {
+  --background: #00f2fe; /* Cambia el color del botón flotante al pasar el ratón */
+}
+
+/* Responsividad */
+@media (max-width: 600px) {
+  ion-col {
+    size: 12; /* Hace que cada producto ocupe toda la fila en pantallas pequeñas */
   }
-  
-  ion-fab-button {
-    --background: #28a745; /* Color verde para el botón */
-    --color: white; /* Color del icono */
+
+  ion-card img {
+    height: 150px; /* Reduce la altura de las imágenes en dispositivos más pequeños */
   }
-  
-  ion-fab {
-    position: fixed;  /* Asegura que se quede fijo */
-    bottom: 10px;     /* Posición a 10px desde la parte inferior de la pantalla */
-    right: 10px;      /* Posición a 10px desde la derecha */
+
+  ion-card-header {
+    padding: 8px;
   }
-  
-  ion-icon {
-    font-size: 28px; /* Ajusta el tamaño del icono */
+
+  ion-card-title {
+    font-size: 1.1em;
   }
-  
-  .fixed-card {
-    height: 250px; /* Fija la altura de todos los cards */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    overflow: hidden; /* Recorta contenido excedente */
+
+  ion-card-subtitle {
+    font-size: 1em;
   }
-  .fixed-card img {
-    height: 120px; /* Ajusta la altura de la imagen */
-    object-fit: cover; /* Recorta la imagen para que encaje */
-    width: 100%; /* Asegura que ocupe todo el ancho */
-  }
+}
+
   

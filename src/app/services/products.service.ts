@@ -27,16 +27,16 @@ export class ProductsService {
 
   // Define la propiedad apiUrl para la URL base de la API
   private apiUrl = '/api/products';
-  private api2Url = 'https://674929505801f51535932201.mockapi.io/api/v1/productos';
+  //rivate api2Url = 'https://674929505801f51535932201.mockapi.io/api/v1/productos';
   // Método para obtener productos de MockAPI
-  getProductsFromApi2(): Promise<Product[]> {
-    return firstValueFrom(this.httpClient.get<Product[]>(this.api2Url));
-  }
+  //getProductsFromApi2(): Promise<Product[]> {
+   // return firstValueFrom(this.httpClient.get<Product[]>(this.apiUrl));
+  //}
 
   // Puedes agregar métodos para crear, actualizar y eliminar de MockAPI si es necesario
-  createProductInApi2(newProduct: Product): Promise<Product> {
-    return firstValueFrom(this.httpClient.post<Product>(this.api2Url, newProduct));
-  }
+  //createProductInApi2(newProduct: Product): Promise<Product> {
+   // return firstValueFrom(this.httpClient.post<Product>(this.api2Url, newProduct));
+  //}
 
 
   // Método para obtener todos los productos
@@ -60,11 +60,11 @@ export class ProductsService {
     );
   }
 
-  createProduct(newProduct: Product): Promise<Product> {
-    return firstValueFrom(
-      this.httpClient.post<Product>('http://localhost:8100/api/products', newProduct)
-    );
+  // Método para crear un producto
+  createProduct(product: Product): Promise<Product> {
+    return firstValueFrom(this.httpClient.post<Product>(this.apiUrl, product));
   }
+  
   
 
   // Método para eliminar un producto por su id

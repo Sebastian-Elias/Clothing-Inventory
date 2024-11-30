@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
 
+
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],  
+  imports: [IonicModule, FormsModule],  
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -26,4 +28,9 @@ export class LoginComponent {
         alert('Error: ' + error.message);
       });
   }
+
+  goToRegister() {
+    this.router.navigate(['/register']);
+  }
+  
 }

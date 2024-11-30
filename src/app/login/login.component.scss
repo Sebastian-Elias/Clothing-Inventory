@@ -1,0 +1,95 @@
+/* Estilo general para el contenido */
+ion-content {
+    padding: 20px;
+    background-color: #f0f0f0; /* Fondo claro para la página */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Asegura que el contenido ocupe toda la altura disponible */
+  }
+  
+  /* Contenedor de bienvenida y título */
+.welcome-container {
+    text-align: center;
+    margin-bottom: 40px; /* Espacio antes del formulario */
+  }
+  
+  .page-title {
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .welcome-message {
+    font-size: 1.2em;
+    color: #777;
+    margin-bottom: 30px; /* Espacio entre el mensaje y el formulario */
+  }
+  
+  /* Contenedor de los campos del formulario */
+.form-field {
+    margin-bottom: 3px; /* Aumenta el espacio entre los elementos del formulario */
+    padding: 5px;
+  }
+
+  /* Estilo para las etiquetas de los inputs */
+  label {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 8px; /* Espacio entre el label y el input */
+    color: #333; /* Color oscuro para el texto */
+    font-weight: 600; /* Peso de fuente más grueso */
+  }
+  
+  /* Estilo de los inputs */
+  ion-input {
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    font-size: 1.1rem; /* Ajusta el tamaño de la fuente para un mejor contraste */
+    background-color: #fff; /* Fondo blanco para el input */
+    border: 1px solid #ccc; /* Borde suave */
+    border-radius: 8px; /* Bordes redondeados para los inputs */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil alrededor del input */
+    transition: box-shadow 0.3s ease-in-out; /* Transición suave al enfocarse */
+  }
+  
+  /* Efecto al enfocar el input */
+  ion-input:focus {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Sombra más intensa cuando se enfoca */
+    border-color: #4facfe; /* Cambia el color del borde cuando el input está enfocado */
+  }
+  
+
+  
+  /* Estilo de los botones al pasar el ratón por encima */
+  ion-button:hover {
+    background-color: #4facfe; /* Cambia el fondo cuando se pasa el ratón por encima */
+  }
+  
+  ion-button:active {
+    background-color: #00f2fe; /* Cambia el fondo cuando se hace clic */
+  }
+  
+  /* Botones con colores personalizados */
+  ion-button[color='light'] {
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    color: #333;
+  }
+  
+  ion-button[color='light']:hover {
+    background-color: #e0e0e0;
+  }
+  
+  ion-button[color='tertiary'] {
+    background-color: #4facfe;
+    color: white;
+  }
+  
+  ion-button[color='medium'] {
+    background-color: #a3a3a3;
+    color: white;
+  }
+  
+  

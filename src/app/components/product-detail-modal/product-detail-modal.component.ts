@@ -18,7 +18,6 @@ import { close } from 'ionicons/icons';
 import { Product } from '../../services/products.service';
 import { EditProductModalComponent } from '../edit-product-modal/edit-product-modal.component';
 
-
 @Component({
   selector: 'app-product-detail-modal',
   templateUrl: './product-detail-modal.component.html',
@@ -39,7 +38,15 @@ import { EditProductModalComponent } from '../edit-product-modal/edit-product-mo
   ],
 })
 export class ProductDetailModalComponent {
-  @Input() product?: Product;
+  @Input() product: Product = {
+    id: '',
+    name: '',
+    description: '',
+    price: 0,
+    category: '',
+    image: '',
+    active: false,
+  }; // Producto definido por defecto
   @Output() edit = new EventEmitter<Product>();
   @Output() delete = new EventEmitter<Product>();
 
@@ -52,8 +59,8 @@ export class ProductDetailModalComponent {
     this.modalController.dismiss();
   }
 
-   // Método para abrir el modal de edición
-   async openEditModal() {
+  // Método para abrir el modal de edición
+  async openEditModal() {
     const modal = await this.modalController.create({
       component: EditProductModalComponent,
       componentProps: {
